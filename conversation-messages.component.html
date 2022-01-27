@@ -1,0 +1,43 @@
+<div class="message-wrap" #scrollMe [scrollTop]="scrollMe.scrollHeight">
+  <div class="message clearfix" *ngFor="let msg of listData" [class.right]="msg?.initatedByME" [class.left]="!msg?.initatedByME"
+    id={{msg.message_id}}>
+    <img *ngIf="!(msg && msg.initatedByME) && msg && msg.sent_by && msg.sent_by.profile_picture" [src]="msg.sent_by.profile_picture">
+    <span *ngIf="!(msg && msg.initatedByME) && !(msg && msg.sent_by && msg.sent_by.profile_picture)" class="profile-icon"><i class="fa fa-user"></i></span>
+    <div class="msg-detail">
+      <div class="msgContent" style="word-break: break-word !important;">
+        <div class="msg-info">
+          <p>{{msg?.initatedByME ? 'You' : msg?.sent_by?.name}}
+            &nbsp; <small class="msg-date">{{msg?.sent_at | date: "MMM d, h:mm a"}}</small>
+          </p>
+        </div>
+        <!--Reply Msg header-->
+        <div class="v-scroll-replyMessage content-row" *ngIf="msg?.reply?.message_id"
+          (click)="scrollToReplyMsg(msg?.reply?.message_id)">
+          <div class="replyMessage-name">{{msg?.reply?.member?.name}} </div>
+          <div [innerHTML]="msg?.reply?.message"></div>
+        </div>
+        <!--End-->
+        <!--Delete msg content start here-->
+        <a *ngIf="msg?.initatedByME" (click)="onDelete(msg)" class="delete-icon" title="Delete"> <i
+            class="mdi mdi-delete"></i></a>
+        <!--End-->
+        <!--Msg Content start here-->
+        <p [innerHTML]="msg?.message"></p>
+        <!--End-->
+        <!--Reply Start here-->
+        <div class="msg-date">
+          <a (click)="onReply(msg)" class="reply-icon"> <i class="mdi mdi-reply"></i> Reply</a>
+        </div>
+        <!--End-->
+      </div>
+      <!-- seen icon for msg read -->
+      <span *ngIf="readunread && msg?.initatedByME && lstmsgid===msg?.message_id"><i class="fa fa-eye" aria-hidden="true"></i></span>
+     
+    </div>
+  </div>
+  <!--User this for date time show in middle also-->
+  <div *ngIf="infoMsg" class="row chatDay">
+    <strong>We didn't find any matches</strong>
+  </div>
+
+</div>
